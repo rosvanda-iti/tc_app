@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>TC Services</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --bg-primary: #F4F6FB;
+  --bg-card: #FFFFFF;
+  --bg-header: linear-gradient(135deg, #0B3D91 0%, #1565C0 50%, #1E88E5 100%);
+  --text-primary: #1A2138;
+  --text-secondary: #6B7A99;
+  --text-white: #FFFFFF;
+  --accent: #0B3D91;
+  --accent-light: #E8EEF9;
+  --accent-bright: #2979FF;
+  --border: #E2E8F0;
+  --shadow-sm: 0 1px 3px rgba(11,61,145,0.06);
+  --shadow-md: 0 4px 14px rgba(11,61,145,0.1);
+  --shadow-lg: 0 8px 28px rgba(11,61,145,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --success: #00C48C;
+  --warning: #FF9F43;
+  --danger: #FF5252;
+  --nav-height: 68px;
+  --qr-size: 54px;
+  --header-height: 88px; /* fallback; updated at runtime */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.dark {
+  --bg-primary: #0F1523;
+  --bg-card: #1A2138;
+  --bg-header: linear-gradient(135deg, #0A1A3A 0%, #0E2A5C 50%, #133A7A 100%);
+  --text-primary: #E8EEF9;
+  --text-secondary: #8A9ABF;
+  --accent: #4DA3FF;
+  --accent-light: #1A2D4D;
+  --accent-bright: #64B5F6;
+  --border: #253354;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  padding-bottom: calc(var(--nav-height) + 30px);
+}
+
+/* ========== HEADER ========== */
+.header {
+  background: var(--bg-header);
+  padding: 12px 16px 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(2,6,23,0.06);
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 80%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header::after {
+  display: none;
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+  border: 2px solid rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-white);
+  backdrop-filter: blur(4px);
+  transition: var(--transition);
+}
+.profile-avatar:active {
+  transform: scale(0.95);
+}
+.profile-info .greeting {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+.profile-info .username {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  color: var(--text-white);
+  font-weight: 600;
+  line-height: 1.2;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.notification-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+  backdrop-filter: blur(4px);
+}
+.notification-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+.notification-btn:active {
+  transform: scale(0.92);
+}
+.notification-btn i {
+  font-size: 18px;
+  color: var(--text-white);
+}
+.notif-badge {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: #FF5252;
+  border-radius: 50%;
+  border: 2px solid #0B3D91;
+  animation: pulse 2s infinite;
+}
+
+/* ========== CONTENT AREA ========== */
+.content {
+  padding: calc(var(--header-height) + 8px) 12px 0;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* ========== BILL CARD (Summary) ========== */
+.bill-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 10px;
+  animation: slideUp 0.4s ease-out both;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.bill-card:active { box-shadow: var(--shadow-lg); }
+.bill-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.bill-card .label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 500;
+}
+.bill-view-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-bright);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bill-view-link i { font-size: 10px; }
+.bill-summary-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bill-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.bill-amount .currency {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: 2px;
+}
+.bill-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.bill-status.unpaid {
+  background: rgba(255,82,82,0.1);
+  color: #FF5252;
+}
+.bill-status.paid {
+  background: rgba(0,196,140,0.1);
+  color: #00C48C;
+}
+.bill-status.overdue {
+  background: rgba(255,159,67,0.1);
+  color: #FF9F43;
+}
+.bill-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.bill-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.bill-meta-item i {
+  font-size: 12px;
+  opacity: 0.6;
+}
+.bill-meta-item strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Bill count badge */
+.bill-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* ========== BILL LIST PAGE ========== */
+.bill-list-summary {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bill-list-summary-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.bill-list-summary-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,82,82,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--danger);
+}
+.bill-list-summary-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+.bill-list-summary-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Invoice list item */
+.invoice-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-list-item:last-child { border-bottom: none; }
+.invoice-list-item:active { background: var(--accent-light); }
+.invoice-list-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.invoice-list-icon.unpaid {
+  background: rgba(255,82,82,0.1);
+  color: #FF5252;
+}
+.invoice-list-icon.paid {
+  background: rgba(0,196,140,0.1);
+  color: #00C48C;
+}
+.invoice-list-icon.overdue {
+  background: rgba(255,159,67,0.1);
+  color: #FF9F43;
+}
+.invoice-list-info {
+  flex: 1;
+  min-width: 0;
+}
+.invoice-list-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.invoice-list-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.invoice-list-subline {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+.invoice-list-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+.invoice-list-right-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  white-space: nowrap;
+}
+.invoice-list-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0;
+}
+.invoice-list-status {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+.invoice-list-status.unpaid {
+  background: rgba(255,82,82,0.1);
+  color: #FF5252;
+}
+.invoice-list-status.paid {
+  background: rgba(0,196,140,0.1);
+  color: #00C48C;
+}
+.invoice-list-status.overdue {
+  background: rgba(255,159,67,0.1);
+  color: #FF9F43;
+}
+
+.invoice-list-action {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* ========== BILL DETAIL PAGE ========== */
+.bill-detail-header {
+  background: var(--bg-header);
+  padding: 16px;
+  padding-bottom: 50px;
+  position: relative;
+}
+.bill-detail-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: -10px;
+  right: -10px;
+  height: 30px;
+  background: var(--bg-primary);
+  border-radius: 50% 50% 0 0;
+}
+.bill-detail-amount-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin: 12px 12px 14px;
+  padding: 18px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  z-index: 3;
+  text-align: center;
+}
+.bill-detail-total-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.bill-detail-total {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.bill-detail-total .currency {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.bill-detail-due {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.bill-detail-due strong {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* Invoice info section */
+.invoice-section {
+  padding: 0 12px 14px;
+}
+.invoice-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.invoice-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.invoice-card-title i {
+  font-size: 14px;
+  color: var(--accent);
+}
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.invoice-row:last-child { border-bottom: none; }
+.invoice-row-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.invoice-row-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* Charges breakdown */
+.charge-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.charge-item:last-child { border-bottom: none; }
+.charge-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.charge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.charge-dot.blue { background: #2979FF; }
+.charge-dot.green { background: #00C48C; }
+.charge-dot.orange { background: #FF9F43; }
+.charge-dot.purple { background: #7C4DFF; }
+.charge-dot.red { background: #FF5252; }
+.charge-name {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.charge-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.charge-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--accent-light);
+  border-top: 2px solid var(--accent);
+}
+.charge-total-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.charge-total-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Pay button */
+.bill-pay-btn {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 0 12px 20px;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--bg-header);
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 0.3px;
+  transition: opacity 0.2s;
+}
+.bill-pay-btn:active { opacity: 0.85; }
+
+/* ========== PAYMENT HISTORY ========== */
+.payment-section {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 12px;
+  animation: slideUp 0.55s ease-out both;
+  border: 1px solid var(--border);
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-title i {
+  color: var(--accent);
+  font-size: 16px;
+}
+.toggle-tabs {
+  display: flex;
+  background: var(--bg-primary);
+  border-radius: 30px;
+  padding: 3px;
+  gap: 3px;
+}
+.toggle-tab {
+  padding: 5px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+}
+.toggle-tab.active {
+  background: var(--accent);
+  color: var(--text-white);
+  box-shadow: 0 4px 10px rgba(11,61,145,0.3);
+}
+.payment-empty {
+  text-align: center;
+  padding: 12px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+.payment-empty i {
+  font-size: 24px;
+  margin-bottom: 4px;
+  display: block;
+  opacity: 0.5;
+  color: var(--accent);
+}
+
+.payment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.payment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+}
+.payment-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+.payment-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent);
+  background: rgba(41,121,255,0.06);
+}
+.payment-item-main {
+  min-width: 0;
+}
+.payment-item-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.payment-item-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.payment-item-amount {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ========== SECTION COMMON ========== */
+.section-block {
+  margin-bottom: 16px;
+}
+.section-block-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-block-title i {
+  font-size: 16px;
+  color: var(--accent);
+}
+.section-block-title .badge {
+  font-size: 11px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  color: var(--text-white);
+  padding: 3px 10px;
+  border-radius: 30px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(11,61,145,0.3);
+}
+
+/* ========== SERVICE CARDS CAROUSEL ========== */
+.carousel-wrapper {
+  position: relative;
+}
+.cards-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 2px 10px;
+}
+.cards-scroll::-webkit-scrollbar { display: none; }
+
+/* Services grid (override carousel behavior for #servicesScroll) */
+#servicesScroll {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  overflow: visible;
+  scroll-snap-type: none;
+  padding-bottom: 0;
+}
+#servicesScroll .service-card {
+  width: 100%;
+  flex: none;
+  min-width: 0;
+}
+@media (max-width: 420px) {
+  #servicesScroll { grid-template-columns: repeat(2, 1fr); }
+}
+
+.service-card {
+  flex: 0 0 calc(33.33% - 6px);
+  min-width: 120px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  box-shadow: var(--shadow-sm);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.service-card:active {
+  transform: scale(0.96);
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.service-card:nth-child(1)::before { background: linear-gradient(90deg, #2979FF, var(--accent-bright)); }
+.service-card:nth-child(2)::before { background: linear-gradient(90deg, var(--success), var(--success)); }
+.service-card:nth-child(3)::before { background: linear-gradient(90deg, #FF9F43, #FF9F43); }
+.service-card:nth-child(4)::before { background: linear-gradient(90deg, #7C4DFF, #9C27B0); }
+.service-card:nth-child(5)::before { background: linear-gradient(90deg, #00BCD4, #26C6DA); }
+.service-card:nth-child(6)::before { background: linear-gradient(90deg, #8BC34A, #C0CA33); }
+
+.service-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+.service-card:hover .service-icon {
+  transform: scale(1.05);
+}
+.service-card:nth-child(1) .service-icon {
+  background: rgba(41,121,255,0.1);
+  color: #2979FF;
+}
+.service-card:nth-child(2) .service-icon {
+  background: rgba(0,196,140,0.1);
+  color: #00C48C;
+}
+.service-card:nth-child(3) .service-icon {
+  background: rgba(255,159,67,0.1);
+  color: #FF9F43;
+}
+.service-card:nth-child(4) .service-icon {
+  background: linear-gradient(135deg, rgba(124,77,255,0.1), rgba(156,39,176,0.15));
+  color: #7C4DFF;
+}
+.service-card:nth-child(5) .service-icon {
+  background: linear-gradient(135deg, rgba(0,188,212,0.1), rgba(38,198,218,0.15));
+  color: #00BCD4;
+}
+.service-card:nth-child(6) .service-icon {
+  background: linear-gradient(135deg, rgba(139,195,74,0.1), rgba(192,202,51,0.15));
+  color: #8BC34A;
+}
+.service-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+.service-card-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s;
+}
+.carousel-dot.active {
+  width: 20px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+/* ========== PACKAGE CARDS ========== */
+.package-card {
+  flex: 0 0 calc(33.33% - 6px);
+  min-width: 120px;
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 14px 12px;
+  box-shadow: var(--shadow-sm);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--border);
+  position: relative;
+}
+.package-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.package-card:active {
+  transform: scale(0.96);
+}
+.package-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent-light));
+  color: var(--accent);
+  transition: var(--transition);
+}
+.package-card:hover .package-icon {
+  transform: scale(1.05);
+}
+.package-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.package-service {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.package-service i {
+  font-size: 12px;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgba(41,121,255,0.06);
+}
+.package-speed {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.package-price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.package-tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--success), var(--success));
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0,196,140,0.35);
+}
+
+/* ========== PROMOTIONS SLIDER ========== */
+.promo-slider {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  box-shadow: var(--shadow-lg);
+}
+.promo-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.promo-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  aspect-ratio: 16 / 6;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.promo-slide:nth-child(1) {
+  background: linear-gradient(135deg, #0B3D91, #1E88E5);
+}
+.promo-slide:nth-child(2) {
+  background: linear-gradient(135deg, #00695C, #26A69A);
+}
+.promo-slide:nth-child(3) {
+  background: linear-gradient(135deg, #BF360C, #FF7043);
+}
+.promo-slide::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 50%;
+  height: 150%;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  transform: rotate(20deg);
+}
+.promo-slide::after {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: -10%;
+  width: 50%;
+  height: 150%;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+  transform: rotate(-10deg);
+}
+.promo-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+  width: 100%;
+}
+.promo-tag {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 30px;
+  margin-bottom: 6px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.promo-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.promo-desc {
+  font-size: 12px;
+  opacity: 0.9;
+}
+.promo-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+  pointer-events: auto;
+  align-items: center;
+}
+.promo-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  padding: 0;
+  appearance: none;
+  display: inline-block;
+}
+.promo-dot.active {
+  width: 20px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+/* ========== BOTTOM NAV ========== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--nav-height);
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 6px 8px;
+  z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  border-radius: 0;
+}
+html.dark .bottom-nav {
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+  background: #1A2138;
+}
+.nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 6px;
+  border-radius: 12px;
+  transition: var(--transition);
+  border: none;
+  background: none;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  text-align: center;
+}
+.nav-item:hover {
+  background: transparent;
+}
+.nav-item:hover i {
+  background: var(--accent-light);
+  transform: translateY(-2px);
+}
+.nav-item:active {
+  transform: scale(0.96);
+}
+.nav-item i {
+  font-size: 20px;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+.nav-item span {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  white-space: nowrap;
+  display: block;
+}
+.nav-item.active i {
+  color: var(--accent);
+  transform: translateY(-1px);
+  background: rgba(41,121,255,0.06);
+}
+.nav-item.active span {
+  color: var(--accent);
+  font-weight: 600;
+}
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(11,61,145,0.12);
+}
+
+/* QR Button */
+.qr-btn {
+  width: var(--qr-size);
+  height: var(--qr-size);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -28px;
+  box-shadow: 0 8px 20px rgba(11,61,145,0.4);
+  cursor: pointer;
+  border: 4px solid var(--bg-card);
+  transition: var(--transition);
+  position: relative;
+  z-index: 2;
+}
+.qr-btn:hover {
+  transform: scale(1.05) rotate(5deg);
+  box-shadow: 0 12px 28px rgba(11,61,145,0.5);
+}
+.qr-btn:active {
+  transform: scale(0.92);
+}
+.qr-btn i {
+  font-size: 22px;
+  color: #fff !important;
+}
+.qr-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 2px;
+  transition: var(--transition);
+}
+.nav-item:hover .qr-label {
+  transform: scale(1.1);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.section-block {
+  animation: slideUp 0.5s ease-out both;
+}
+.section-block:nth-child(1) { animation-delay: 0.05s; }
+.section-block:nth-child(2) { animation-delay: 0.15s; }
+.section-block:nth-child(3) { animation-delay: 0.25s; }
+.section-block:nth-child(4) { animation-delay: 0.35s; }
+
+/* ========== PAGE VIEWS ========== */
+.page-view {
+  display: none;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+.page-view.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Sub-page header */
+.sub-header {
+  background: var(--bg-header);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.back-btn:active { background: rgba(255,255,255,0.25); }
+.sub-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Banner */
+.detail-banner {
+  margin: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 6;
+}
+.detail-banner-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  position: relative;
+}
+.detail-banner-inner.internet-bg {
+  background: linear-gradient(135deg, #0B3D91, #1E88E5);
+}
+.detail-banner-inner.phone-bg {
+  background: linear-gradient(135deg, #1A237E, #5C6BC0);
+}
+.detail-banner-inner.vpn-bg {
+  background: linear-gradient(135deg, #E65100, #FF9800);
+}
+.detail-banner-inner.pkg-bg {
+  background: linear-gradient(135deg, #00695C, #26A69A);
+}
+.detail-banner-inner::after {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -15%;
+  width: 50%;
+  height: 160%;
+  background: rgba(255,255,255,0.07);
+  border-radius: 50%;
+}
+.banner-text {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+.banner-text h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.banner-text p {
+  font-size: 12px;
+  opacity: 0.8;
+}
+.banner-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: rgba(255,255,255,0.15);
+  z-index: 1;
+}
+
+/* Product list */
+.product-list {
+  padding: 0 12px 12px;
+}
+.product-list-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+.product-list-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-bottom: 1px solid var(--border);
+}
+.product-item:last-child {
+  border-bottom: none;
+}
+.product-item:active {
+  background: var(--accent-light);
+}
+.product-item-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.product-item-icon.blue { background: rgba(41,121,255,0.12); color: #2979FF; }
+.product-item-icon.green { background: rgba(0,196,140,0.12); color: #00C48C; }
+.product-item-icon.orange { background: rgba(255,159,67,0.12); color: #FF9F43; }
+.product-item-icon.purple { background: rgba(124,77,255,0.12); color: #7C4DFF; }
+.product-item-icon.teal { background: rgba(0,150,136,0.12); color: #009688; }
+.product-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.product-item-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.product-item-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-item-arrow {
+  color: var(--text-secondary);
+  font-size: 14px;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+/* Detail page pagination dots */
+.detail-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 0;
+}
+.detail-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.3s;
+}
+.detail-dot.active {
+  width: 20px;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 360px) {
+  .service-card, .package-card { min-width: 120px; }
+  .promo-title { font-size: 16px; }
+  .toggle-tab { padding: 5px 10px; font-size: 11px; }
+}
+@media (min-width: 500px) {
+  .content { max-width: 480px; margin-left: auto; margin-right: auto; }
+  .header { padding: 12px 16px 12px; }
+  .bottom-nav { left: 0; right: 0; width: 100%; border-radius: 0; transform: none; max-width: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page-view active" id="page-home">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <div class="profile-section">
+        <div class="profile-avatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+          <div class="greeting">Welcome</div>
+          <div class="username">Guest</div>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="notification-btn" aria-label="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notif-badge"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <!-- Current Bill Due -->
+    <div class="bill-card" id="billCard">
+      <div class="bill-card-top">
+        <div class="label">Current Bill Due<span class="bill-count-badge" id="billCountBadge">2</span></div>
+        <div class="bill-view-link">View Detail / Pay Now<i class="fas fa-chevron-right"></i></div>
+      </div>
+      <div class="bill-summary-row">
+        <div class="bill-amount"><span id="billTotalAmount">$299.10</span></div>
+        <span class="bill-status unpaid">Unpaid</span>
+      </div>
+      <div class="bill-meta" id="billMeta">
+        <!-- Due dates injected by JS -->
+      </div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="payment-section">
+      <div class="section-header">
+        <span class="section-title">
+          <i class="fas fa-clock-rotate-left"></i>
+          Payment History
+        </span>
+        <div class="toggle-tabs">
+          <button class="toggle-tab active" data-range="1">1 Month</button>
+          <button class="toggle-tab" data-range="6">6 Months</button>
+        </div>
+      </div>
+      <div class="payment-list" id="paymentHistoryList"></div>
+      <div class="payment-empty" id="paymentEmpty">
+        <i class="fas fa-receipt"></i>
+        No recent payments
+      </div>
+    </div>
+
+    <!-- Services -->
+    <section class="section-block" id="services-section">
+      <div class="section-block-title">
+        <i class="fas fa-bolt" style="color: var(--accent);"></i>
+        <span>Services</span>
+      </div>
+      <div class="carousel-wrapper">
+        <div class="cards-scroll" id="servicesScroll" role="list">
+          <div class="service-card" data-service="phone" role="listitem">
+            <div class="service-icon"><i class="fas fa-phone-alt"></i></div>
+            <div class="service-card-title">Fixed Phone</div>
+            <div class="service-card-desc">Landline voice</div>
+          </div>
+          <div class="service-card" data-service="internet" role="listitem">
+            <div class="service-icon"><i class="fas fa-wifi"></i></div>
+            <div class="service-card-title">Internet</div>
+            <div class="service-card-desc">High-speed</div>
+          </div>
+          <div class="service-card" data-service="vpn" role="listitem">
+            <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="service-card-title">VPN</div>
+            <div class="service-card-desc">Secure access</div>
+          </div>
+          <div class="service-card" role="listitem">
+            <div class="service-icon"><i class="fas fa-phone"></i></div>
+            <div class="service-card-title">VoIP 154</div>
+            <div class="service-card-desc">Cloud voice</div>
+          </div>
+          <div class="service-card" role="listitem">
+            <div class="service-icon"><i class="fas fa-network-wired"></i></div>
+            <div class="service-card-title">SIP Trunk</div>
+            <div class="service-card-desc">SIP trunking</div>
+          </div>
+          <div class="service-card" role="listitem">
+            <div class="service-icon"><i class="fas fa-globe"></i></div>
+            <div class="service-card-title">IDD</div>
+            <div class="service-card-desc">International calls</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages -->
+    <section class="section-block" id="packages-section">
+      <div class="section-block-title">
+        <i class="fas fa-boxes-packing" style="color: var(--accent);"></i>
+        <span>Packages</span>
+        <span class="badge">Hot</span>
+      </div>
+      <div class="carousel-wrapper">
+        <div class="cards-scroll" id="packagesScroll">
+          <div class="package-card">
+            <span class="package-tag">Popular</span>
+            <div class="package-icon"><i class="fas fa-home"></i></div>
+            <div class="package-name">Home Basic</div>
+            <div class="package-service"><i class="fas fa-wifi"></i><span>Internet</span></div>
+            <div class="package-speed">50 Mbps</div>
+            <div class="package-price">$19/month</div>
+          </div>
+          <div class="package-card">
+            <div class="package-icon"><i class="fas fa-house-chimney"></i></div>
+            <div class="package-name">Home Plus</div>
+            <div class="package-service"><i class="fas fa-wifi"></i><span>Internet</span></div>
+            <div class="package-speed">100 Mbps</div>
+            <div class="package-price">$29/month</div>
+          </div>
+          <div class="package-card">
+            <div class="package-icon"><i class="fas fa-building"></i></div>
+            <div class="package-name">Biz Pro</div>
+            <div class="package-service"><i class="fas fa-wifi"></i><span>Internet</span></div>
+            <div class="package-speed">200 Mbps</div>
+            <div class="package-price">$49/month</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Offers -->
+    <section class="section-block" id="promo-section">
+      <div class="section-block-title">
+        <i class="fas fa-tags" style="color: var(--accent);"></i>
+        <span>Offers</span>
+      </div>
+      <div class="promo-slider">
+        <div class="promo-track" id="promoTrack">
+          <div class="promo-slide">
+            <div class="promo-content">
+              <div class="promo-tag">🔥 Limited</div>
+              <div class="promo-title">50% OFF</div>
+              <div class="promo-desc">First 3 months</div>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <div class="promo-content">
+              <div class="promo-tag">📦 Bundle</div>
+              <div class="promo-title">Phone + Internet</div>
+              <div class="promo-desc">Save 30%</div>
+            </div>
+          </div>
+          <div class="promo-slide">
+            <div class="promo-content">
+              <div class="promo-tag">⚡ Upgrade</div>
+              <div class="promo-title">Double Speed</div>
+              <div class="promo-desc">Free upgrade</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="promo-dots" id="promoDots" aria-label="Promotion slides">
+          <button class="promo-dot active" data-index="0" aria-label="Slide 1"></button>
+          <button class="promo-dot" data-index="1" aria-label="Slide 2"></button>
+          <button class="promo-dot" data-index="2" aria-label="Slide 3"></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="home">
+      <i class="fas fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button class="nav-item" data-page="location" aria-label="Location">
+      <i class="fas fa-file-lines"></i>
+      <span>Service Request</span>
+    </button>
+    <div class="nav-item">
+      <div class="qr-btn" id="qrBtn" role="button" aria-label="QR Scanner">
+        <i class="fas fa-qrcode"></i>
+      </div>
+      <span class="qr-label">QR</span>
+    </div>
+    <button class="nav-item" data-page="service">
+      <i class="fas fa-headset"></i>
+      <span>Support</span>
+    </button>
+    <button class="nav-item" data-page="about">
+      <i class="fas fa-info-circle"></i>
+      <span>About</span>
+    </button>
+  </nav>
+
+</div>
+
+<!-- ==================== PRODUCT PAGE ==================== -->
+<div class="page-view" id="page-product">
+  <div class="sub-header">
+    <button class="back-btn" id="productBackBtn"><i class="fas fa-arrow-left"></i></button>
+    <span class="sub-header-title" id="productPageTitle">Internet Service</span>
+  </div>
+
+  <div class="detail-banner">
+    <div class="detail-banner-inner internet-bg" id="productBanner">
+      <div class="banner-text">
+        <h3 id="productBannerTitle">Internet Service</h3>
+        <p id="productBannerDesc">Browse our available products</p>
+      </div>
+      <i class="banner-icon fas fa-globe" id="productBannerIcon"></i>
+    </div>
+  </div>
+
+  <div class="product-list">
+    <div class="product-list-title">Products</div>
+    <div class="product-list-card" id="productListCard">
+      <!-- Products injected by JS -->
+    </div>
+  </div>
+
+  <div class="detail-dots" id="productDots">
+    <span class="detail-dot active"></span>
+    <span class="detail-dot"></span>
+    <span class="detail-dot"></span>
+  </div>
+</div>
+
+<!-- ==================== PRODUCT PACKAGE PAGE ==================== -->
+<div class="page-view" id="page-package">
+  <div class="sub-header">
+    <button class="back-btn" id="packageBackBtn"><i class="fas fa-arrow-left"></i></button>
+    <span class="sub-header-title" id="packagePageTitle">Product Package</span>
+  </div>
+
+  <div class="detail-banner">
+    <div class="detail-banner-inner pkg-bg" id="packageBanner">
+      <div class="banner-text">
+        <h3 id="packageBannerTitle">Product Package</h3>
+        <p id="packageBannerDesc">Choose a package that fits your needs</p>
+      </div>
+      <i class="banner-icon fas fa-box-open" id="packageBannerIcon"></i>
+    </div>
+  </div>
+
+  <div class="product-list">
+    <div class="product-list-title">Packages</div>
+    <div class="product-list-card" id="packageListCard">
+      <!-- Packages injected by JS -->
+    </div>
+  </div>
+
+  <div class="detail-dots" id="packageDots">
+    <span class="detail-dot active"></span>
+    <span class="detail-dot"></span>
+    <span class="detail-dot"></span>
+  </div>
+</div>
+
+<!-- ==================== BILL LIST PAGE ==================== -->
+<div class="page-view" id="page-bill-list">
+  <div class="sub-header">
+    <button class="back-btn" id="billListBackBtn"><i class="fas fa-arrow-left"></i></button>
+    <span class="sub-header-title">Current Bills Due</span>
+  </div>
+
+  <div class="bill-list-summary">
+    <div class="bill-list-summary-left">
+      <div class="bill-list-summary-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+      <div>
+        <div class="bill-list-summary-label">Total Outstanding</div>
+        <div class="bill-list-summary-amount" id="billListTotal">$299.10</div>
+      </div>
+    </div>
+    <span class="bill-status unpaid" id="billListStatus">2 Unpaid</span>
+  </div>
+
+  <div class="product-list">
+    <div class="product-list-title">Invoices</div>
+    <div class="product-list-card" id="invoiceListCard">
+      <!-- Invoice list items injected by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BILL DETAIL PAGE ==================== -->
+<div class="page-view" id="page-bill">
+  <div class="sub-header">
+    <button class="back-btn" id="billBackBtn"><i class="fas fa-arrow-left"></i></button>
+    <span class="sub-header-title" id="billDetailTitle">Invoice Detail</span>
+  </div>
+
+  <!-- Amount Card -->
+  <div class="bill-detail-amount-card">
+    <div class="bill-detail-total-label">Total Amount Due</div>
+    <div class="bill-detail-total" id="billDetailTotal"><span class="currency">$ </span>156.80</div>
+    <div class="bill-detail-due" id="billDetailDue">Due Date: <strong>15/03/2026</strong></div>
+  </div>
+
+  <button class="bill-pay-btn" id="billPayBtn">Pay Now</button>
+
+  <div class="invoice-section">
+    <div class="invoice-card">
+      <div class="invoice-card-header">
+        <span class="invoice-card-title"><i class="fas fa-file-invoice"></i> Invoice Information</span>
+      </div>
+      <div id="billDetailInfoRows">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Charges Breakdown -->
+  <div class="invoice-section">
+    <div class="invoice-card">
+      <div class="invoice-card-header">
+        <span class="invoice-card-title"><i class="fas fa-list-ul"></i> Charges Breakdown</span>
+      </div>
+      <div id="billDetailCharges">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Info -->
+  <div class="invoice-section">
+    <div class="invoice-card">
+      <div class="invoice-card-header">
+        <span class="invoice-card-title"><i class="fas fa-credit-card"></i> Payment Information</span>
+      </div>
+      <div id="billDetailPayment">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ===== Dark mode detection ===== */
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('dark');
+}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(event) {
+  if (event.matches) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+});
+
+/* ===== Prevent scroll restore on reload (match dashboard_new.html) ===== */
+if ('scrollRestoration' in history) {
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* ignore */ }
+}
+window.scrollTo(0, 0);
+window.addEventListener('beforeunload', function() { window.scrollTo(0, 0); });
+window.addEventListener('load', function() { window.scrollTo(0, 0); });
+
+/* ===== Fixed Home header height sync ===== */
+function syncHomeHeaderHeight() {
+  var header = document.querySelector('#page-home .header');
+  if (!header) return;
+  var h = header.offsetHeight || 0;
+  if (h > 0) {
+    document.documentElement.style.setProperty('--header-height', h + 'px');
+  }
+}
+window.addEventListener('load', syncHomeHeaderHeight);
+window.addEventListener('resize', syncHomeHeaderHeight);
+
+/* ===== SERVICE DATA ===== */
+var serviceData = {
+  internet: {
+    title: 'Internet Service',
+    desc: 'Browse our available internet products',
+    icon: 'fas fa-globe',
+    bannerClass: 'internet-bg',
+    products: [
+      { name: 'FTTH Home', desc: 'Fiber to the home', icon: 'fas fa-home', color: 'blue' },
+      { name: 'FTTH Business', desc: 'Fiber for business', icon: 'fas fa-building', color: 'green' },
+      { name: 'Broadband DSL', desc: 'DSL connection', icon: 'fas fa-wifi', color: 'orange' },
+      { name: 'Dedicated Line', desc: 'Dedicated internet line', icon: 'fas fa-server', color: 'purple' },
+      { name: 'Wireless LTE', desc: 'LTE wireless broadband', icon: 'fas fa-satellite-dish', color: 'teal' }
+    ]
+  },
+  phone: {
+    title: 'Fixed Phone Service',
+    desc: 'Browse our available phone products',
+    icon: 'fas fa-phone-alt',
+    bannerClass: 'phone-bg',
+    products: [
+      { name: 'Basic Line', desc: 'Standard phone line', icon: 'fas fa-phone', color: 'blue' },
+      { name: 'Business Line', desc: 'Multi-line for business', icon: 'fas fa-phone-office', color: 'green' },
+      { name: 'IDD Service', desc: 'International direct dialing', icon: 'fas fa-globe', color: 'orange' },
+      { name: 'ISDN PRI', desc: 'ISDN primary rate', icon: 'fas fa-network-wired', color: 'purple' }
+    ]
+  },
+  vpn: {
+    title: 'VPN Service',
+    desc: 'Browse our available VPN products',
+    icon: 'fas fa-shield-alt',
+    bannerClass: 'vpn-bg',
+    products: [
+      { name: 'MPLS VPN', desc: 'Multi-protocol label switching', icon: 'fas fa-lock', color: 'blue' },
+      { name: 'IP VPN', desc: 'Internet protocol VPN', icon: 'fas fa-shield-alt', color: 'green' },
+      { name: 'Metro Ethernet', desc: 'Metro ethernet service', icon: 'fas fa-ethernet', color: 'orange' }
+    ]
+  }
+};
+
+/* ===== PACKAGE DATA ===== */
+var packageData = {
+  'FTTH Home': {
+    title: 'FTTH Home',
+    desc: 'Choose a home fiber package',
+    packages: [
+      { name: 'Home 30 Mbps', desc: '30 Mbps download / 15 Mbps upload', icon: 'fas fa-bolt', color: 'blue' },
+      { name: 'Home 50 Mbps', desc: '50 Mbps download / 25 Mbps upload', icon: 'fas fa-bolt', color: 'green' },
+      { name: 'Home 100 Mbps', desc: '100 Mbps download / 50 Mbps upload', icon: 'fas fa-bolt', color: 'orange' },
+      { name: 'Home 200 Mbps', desc: '200 Mbps download / 100 Mbps upload', icon: 'fas fa-rocket', color: 'purple' }
+    ]
+  },
+  'FTTH Business': {
+    title: 'FTTH Business',
+    desc: 'Choose a business fiber package',
+    packages: [
+      { name: 'Biz 50 Mbps', desc: '50 Mbps symmetric', icon: 'fas fa-bolt', color: 'blue' },
+      { name: 'Biz 100 Mbps', desc: '100 Mbps symmetric', icon: 'fas fa-bolt', color: 'green' },
+      { name: 'Biz 200 Mbps', desc: '200 Mbps symmetric', icon: 'fas fa-rocket', color: 'orange' }
+    ]
+  },
+  _default: {
+    title: 'Packages',
+    desc: 'Available packages',
+    packages: [
+      { name: 'Standard', desc: 'Standard package', icon: 'fas fa-box', color: 'blue' },
+      { name: 'Premium', desc: 'Premium package', icon: 'fas fa-gem', color: 'green' },
+      { name: 'Enterprise', desc: 'Enterprise package', icon: 'fas fa-building', color: 'orange' }
+    ]
+  }
+};
+
+/* ===== PAGE NAVIGATION ===== */
+var currentService = null;
+function showPage(pageId) {
+  document.querySelectorAll('.page-view').forEach(function(p) { p.classList.remove('active'); });
+  var page = document.getElementById(pageId);
+  if (page) {
+    page.classList.add('active');
+    window.scrollTo(0, 0);
+    if (pageId === 'page-home') {
+      setTimeout(syncHomeHeaderHeight, 0);
+    }
+  }
+}
+
+function renderProductList(items, containerId, isPackage) {
+  var container = document.getElementById(containerId);
+  container.innerHTML = '';
+  items.forEach(function(item) {
+    var div = document.createElement('div');
+    div.className = 'product-item';
+    if (!isPackage) { div.setAttribute('data-product', item.name); }
+    div.innerHTML =
+      '<div class="product-item-icon ' + item.color + '"><i class="' + item.icon + '"></i></div>' +
+      '<div class="product-item-info">' +
+        '<div class="product-item-name">' + item.name + '</div>' +
+        '<div class="product-item-desc">' + item.desc + '</div>' +
+      '</div>' +
+      '<i class="product-item-arrow fas fa-chevron-right"></i>';
+    container.appendChild(div);
+  });
+}
+
+/* Open Product page */
+function openProductPage(serviceKey) {
+  var data = serviceData[serviceKey];
+  if (!data) return;
+  currentService = serviceKey;
+
+  document.getElementById('productPageTitle').textContent = data.title;
+  document.getElementById('productBannerTitle').textContent = data.title;
+  document.getElementById('productBannerDesc').textContent = data.desc;
+  document.getElementById('productBannerIcon').className = 'banner-icon ' + data.icon;
+
+  var banner = document.getElementById('productBanner');
+  banner.className = 'detail-banner-inner ' + data.bannerClass;
+
+  renderProductList(data.products, 'productListCard', false);
+
+  /* Attach click to each product item */
+  document.querySelectorAll('#productListCard .product-item').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var productName = item.getAttribute('data-product');
+      openPackagePage(productName);
+    });
+  });
+
+  showPage('page-product');
+}
+
+/* Open Package page */
+function openPackagePage(productName) {
+  var data = packageData[productName] || packageData._default;
+  var title = data.title || productName;
+
+  document.getElementById('packagePageTitle').textContent = title;
+  document.getElementById('packageBannerTitle').textContent = title;
+  document.getElementById('packageBannerDesc').textContent = data.desc;
+
+  renderProductList(data.packages, 'packageListCard', true);
+  showPage('page-package');
+}
+
+/* ===== INVOICE DATA ===== */
+var invoices = [
+  {
+    id: 'INV-20260201',
+    period: '01/02/2026 - 28/02/2026',
+    issueDate: '01/03/2026',
+    dueDate: '15/03/2026',
+    dueDateShort: '15/03/2026',
+    accountId: 'ACC-8832741',
+    customer: 'Guest User',
+    status: 'unpaid',
+    total: 156.80,
+    charges: [
+      { name: 'Internet - FTTH 100Mbps', amount: 49.00, color: 'blue' },
+      { name: 'Fixed Phone Line', amount: 12.50, color: 'green' },
+      { name: 'VPN Service', amount: 35.00, color: 'orange' },
+      { name: 'Equipment Rental', amount: 8.00, color: 'purple' },
+      { name: 'Tax (10%)', amount: 10.45, color: 'red' },
+      { name: 'Discount', amount: -8.15, color: 'green' }
+    ],
+    payment: {
+      lastPayment: '$142.30 on 14/01/2026',
+      method: 'Auto-Pay (Visa ****4821)'
+    }
+  },
+  {
+    id: 'INV-20260101',
+    period: '01/01/2026 - 31/01/2026',
+    issueDate: '01/02/2026',
+    dueDate: '15/02/2026',
+    dueDateShort: '15/02/2026',
+    accountId: 'ACC-8832741',
+    customer: 'Guest User',
+    status: 'unpaid',
+    total: 142.30,
+    charges: [
+      { name: 'Internet - FTTH 100Mbps', amount: 49.00, color: 'blue' },
+      { name: 'Fixed Phone Line', amount: 12.50, color: 'green' },
+      { name: 'VPN Service', amount: 35.00, color: 'orange' },
+      { name: 'Equipment Rental', amount: 8.00, color: 'purple' },
+      { name: 'Tax (10%)', amount: 10.45, color: 'red' },
+      { name: 'Late Fee', amount: 5.00, color: 'red' },
+      { name: 'Discount', amount: -17.65, color: 'green' }
+    ],
+    payment: {
+      lastPayment: '$138.50 on 12/12/2025',
+      method: 'Auto-Pay (Visa ****4821)'
+    }
+  }
+];
+
+/* ===== PAYMENT HISTORY (mock) ===== */
+var paymentHistory = [
+  {
+    title: 'Invoice Payment',
+    invoiceNo: 'INV-20251201',
+    amount: 138.50,
+    date: '12/12/2025',
+    method: 'Auto-Pay (Visa ****4821)'
+  },
+  {
+    title: 'Invoice Payment',
+    invoiceNo: 'INV-20260101',
+    amount: 142.30,
+    date: '14/01/2026',
+    method: 'Auto-Pay (Visa ****4821)'
+  },
+  {
+    title: 'Invoice Payment',
+    invoiceNo: 'INV-20260201',
+    amount: 139.95,
+    date: '15/02/2026',
+    method: 'Auto-Pay (Visa ****4821)'
+  }
+];
+
+function parseDdMmYyyy(dateStr) {
+  if (!dateStr || typeof dateStr !== 'string') return null;
+  var parts = dateStr.split('/');
+  if (parts.length !== 3) return null;
+  var dd = parseInt(parts[0], 10);
+  var mm = parseInt(parts[1], 10);
+  var yyyy = parseInt(parts[2], 10);
+  if (!dd || !mm || !yyyy) return null;
+  return new Date(yyyy, mm - 1, dd);
+}
+
+function renderPaymentHistory(rangeMonths) {
+  var listEl = document.getElementById('paymentHistoryList');
+  var emptyEl = document.getElementById('paymentEmpty');
+  if (!listEl || !emptyEl) return;
+
+  var today = new Date();
+  var cutoff = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  cutoff.setMonth(cutoff.getMonth() - (rangeMonths || 1));
+
+  var items = paymentHistory
+    .map(function(p) {
+      return {
+        title: p.title,
+        invoiceNo: p.invoiceNo,
+        amount: p.amount,
+        date: p.date,
+        method: p.method,
+        _dateObj: parseDdMmYyyy(p.date)
+      };
+    })
+    .filter(function(p) {
+      return p._dateObj && p._dateObj >= cutoff;
+    })
+    .sort(function(a, b) {
+      return b._dateObj - a._dateObj;
+    });
+
+  if (items.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  listEl.innerHTML = items.map(function(p) {
+    var invoiceLine = p.invoiceNo ? ('<div class="payment-item-sub">Invoice No: ' + p.invoiceNo + '</div>') : '';
+    return (
+      '<div class="payment-item">' +
+        '<div class="payment-item-left">' +
+          '<div class="payment-item-icon"><i class="fas fa-credit-card"></i></div>' +
+          '<div class="payment-item-main">' +
+            '<div class="payment-item-title">' + p.title + '</div>' +
+            invoiceLine +
+            '<div class="payment-item-sub">' + p.date + ' • ' + p.method + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="payment-item-amount">$' + Number(p.amount || 0).toFixed(2) + '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+/* Render bill summary card on dashboard (Home) */
+function renderBillCardSummary() {
+  var unpaid = invoices.filter(function(inv) { return inv.status === 'unpaid'; });
+  var unpaidCount = unpaid.length;
+  var total = unpaid.reduce(function(sum, inv) { return sum + inv.total; }, 0);
+
+  var totalAmountEl = document.getElementById('billTotalAmount');
+  if (totalAmountEl) totalAmountEl.textContent = '$' + total.toFixed(2);
+
+  var badgeEl = document.getElementById('billCountBadge');
+  if (badgeEl) {
+    badgeEl.textContent = String(unpaidCount);
+    badgeEl.style.display = unpaidCount > 0 ? 'inline-flex' : 'none';
+  }
+
+  var statusEl = document.querySelector('#billCard .bill-status');
+  if (statusEl) {
+    if (unpaidCount > 0) {
+      statusEl.className = 'bill-status unpaid';
+      statusEl.textContent = 'Unpaid';
+    } else {
+      statusEl.className = 'bill-status paid';
+      statusEl.textContent = 'Paid';
+    }
+  }
+
+  var metaEl = document.getElementById('billMeta');
+  if (!metaEl) return;
+
+  var dueHtml = '';
+  unpaid.forEach(function(inv) {
+    var dueText = inv.dueDateShort || inv.dueDate;
+    dueHtml += '<div class="bill-meta-item"><i class="fas fa-calendar"></i> <span>' + inv.id + ' — Due Date</span> <strong>' + dueText + '</strong></div>';
+  });
+
+  if (unpaidCount === 0) {
+    dueHtml = '<div class="bill-meta-item"><i class="fas fa-check-circle"></i> <span>All invoices paid</span></div>';
+  }
+
+  metaEl.innerHTML = dueHtml;
+}
+
+/* Calculate totals */
+function getUnpaidTotal() {
+  return invoices.filter(function(inv) { return inv.status === 'unpaid'; })
+    .reduce(function(sum, inv) { return sum + inv.total; }, 0);
+}
+function getUnpaidCount() {
+  return invoices.filter(function(inv) { return inv.status === 'unpaid'; }).length;
+}
+
+/* Render the invoice list page */
+function renderInvoiceList() {
+  var container = document.getElementById('invoiceListCard');
+  container.innerHTML = '';
+  invoices.forEach(function(inv, idx) {
+    var div = document.createElement('div');
+    div.className = 'invoice-list-item';
+    div.setAttribute('data-inv-idx', idx);
+    var statusClass = inv.status === 'paid' ? 'paid' : 'unpaid';
+    var statusLabel = inv.status === 'paid' ? 'Paid' : 'Unpaid';
+    var icon = inv.status === 'paid' ? 'fa-check-circle' : 'fa-clock';
+    var actionLabel = inv.status === 'paid' ? 'View Detail' : 'View Detail / Pay Now';
+    var issueText = inv.issueDate ? inv.issueDate : '-';
+    div.innerHTML =
+      '<div class="invoice-list-icon ' + statusClass + '"><i class="fas ' + icon + '"></i></div>' +
+      '<div class="invoice-list-info">' +
+        '<div class="invoice-list-name">' + inv.id + '</div>' +
+        '<div class="invoice-list-date">Period: ' + inv.period + '</div>' +
+        '<div class="invoice-list-subline">Issue date: ' + issueText + '</div>' +
+        '<div class="invoice-list-subline">Due Date: ' + inv.dueDate + '</div>' +
+      '</div>' +
+      '<div class="invoice-list-right">' +
+        '<div class="invoice-list-right-top">' +
+          '<div class="invoice-list-amount">$' + inv.total.toFixed(2) + '</div>' +
+          '<span class="invoice-list-status ' + statusClass + '">' + statusLabel + '</span>' +
+        '</div>' +
+        '<span class="invoice-list-action">' + actionLabel + '</span>' +
+      '</div>';
+    div.addEventListener('click', function() {
+      openBillDetail(idx);
+    });
+    container.appendChild(div);
+  });
+
+  /* Update summary */
+  var total = getUnpaidTotal();
+  var count = getUnpaidCount();
+  document.getElementById('billListTotal').textContent = '$' + total.toFixed(2);
+  var billListStatus = document.getElementById('billListStatus');
+  if (billListStatus) {
+    billListStatus.className = 'bill-status ' + (count > 0 ? 'unpaid' : 'paid');
+    billListStatus.textContent = count > 0 ? (count + ' Unpaid') : 'Paid';
+  }
+}
+
+/* Open bill detail for a specific invoice */
+function openBillDetail(idx) {
+  var inv = invoices[idx];
+  if (!inv) return;
+
+  document.getElementById('billDetailTitle').textContent = inv.id;
+  document.getElementById('billDetailTotal').innerHTML = '<span class="currency">$ </span>' + inv.total.toFixed(2);
+  var dueColor = inv.status === 'unpaid' ? 'var(--danger)' : 'var(--success)';
+  document.getElementById('billDetailDue').innerHTML = 'Due Date: <strong style="color:' + dueColor + ';">' + inv.dueDate + '</strong>';
+
+  /* Info rows */
+  var infoHtml =
+    '<div class="invoice-row"><span class="invoice-row-label">Invoice No.</span><span class="invoice-row-value">' + inv.id + '</span></div>' +
+    '<div class="invoice-row"><span class="invoice-row-label">Billing Period</span><span class="invoice-row-value">' + inv.period + '</span></div>' +
+    '<div class="invoice-row"><span class="invoice-row-label">Account ID</span><span class="invoice-row-value">' + inv.accountId + '</span></div>' +
+    '<div class="invoice-row"><span class="invoice-row-label">Customer Name</span><span class="invoice-row-value">' + inv.customer + '</span></div>' +
+    '<div class="invoice-row"><span class="invoice-row-label">Status</span><span class="invoice-row-value" style="color:' + (inv.status === 'unpaid' ? '#FF5252' : '#00C48C') + ';">' + (inv.status === 'unpaid' ? 'Unpaid' : 'Paid') + '</span></div>';
+  document.getElementById('billDetailInfoRows').innerHTML = infoHtml;
+
+  /* Charges */
+  var chargesHtml = '';
+  inv.charges.forEach(function(ch) {
+    var amtStyle = ch.amount < 0 ? ' style="color:#00C48C;"' : '';
+    var amtStr = ch.amount < 0 ? '-$' + Math.abs(ch.amount).toFixed(2) : '$' + ch.amount.toFixed(2);
+    chargesHtml +=
+      '<div class="charge-item"><div class="charge-item-left"><span class="charge-dot ' + ch.color + '"></span><span class="charge-name">' + ch.name + '</span></div><span class="charge-amount"' + amtStyle + '>' + amtStr + '</span></div>';
+  });
+  chargesHtml += '<div class="charge-total"><span class="charge-total-label">Total</span><span class="charge-total-amount">$' + inv.total.toFixed(2) + '</span></div>';
+  document.getElementById('billDetailCharges').innerHTML = chargesHtml;
+
+  /* Payment info */
+  var payHtml =
+    '<div class="invoice-row"><span class="invoice-row-label">Last Payment</span><span class="invoice-row-value">' + inv.payment.lastPayment + '</span></div>' +
+    '<div class="invoice-row"><span class="invoice-row-label">Payment Method</span><span class="invoice-row-value">' + inv.payment.method + '</span></div>';
+  document.getElementById('billDetailPayment').innerHTML = payHtml;
+
+  /* Pay button */
+  var payBtn = document.getElementById('billPayBtn');
+  if (inv.status === 'unpaid') {
+    payBtn.style.display = 'block';
+    payBtn.innerHTML = '<i class="fas fa-lock" style="margin-right:6px;"></i> Pay Now — $' + inv.total.toFixed(2);
+  } else {
+    payBtn.style.display = 'none';
+  }
+
+  showPage('page-bill');
+}
+
+/* Back buttons */
+document.getElementById('productBackBtn').addEventListener('click', function() {
+  showPage('page-home');
+});
+document.getElementById('packageBackBtn').addEventListener('click', function() {
+  showPage('page-product');
+});
+document.getElementById('billListBackBtn').addEventListener('click', function() {
+  showPage('page-home');
+});
+document.getElementById('billBackBtn').addEventListener('click', function() {
+  showPage('page-bill-list');
+});
+
+/* ===== Bill card click → open bill list ===== */
+document.getElementById('billCard').addEventListener('click', function() {
+  renderInvoiceList();
+  showPage('page-bill-list');
+});
+
+/* ===== SERVICE CARD CLICKS ===== */
+document.querySelectorAll('.service-card[data-service]').forEach(function(card) {
+  card.addEventListener('click', function() {
+    var key = card.getAttribute('data-service');
+    openProductPage(key);
+  });
+});
+
+/* ===== Toggle tabs (Payment History) ===== */
+document.querySelectorAll('.toggle-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.toggle-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+
+    var range = parseInt(tab.getAttribute('data-range') || '1', 10);
+    if (isNaN(range) || range <= 0) range = 1;
+    renderPaymentHistory(range);
+  });
+});
+
+/* ===== Service cards scroll indicator ===== */
+(function() {
+  var scroll = document.getElementById('servicesScroll');
+  var dots = document.querySelectorAll('#serviceDots .carousel-dot');
+  if (!scroll || dots.length === 0) return;
+
+  scroll.addEventListener('scroll', function() {
+    var scrollLeft = scroll.scrollLeft;
+    var cardWidth = scroll.children[0].offsetWidth + 8;
+    var index = Math.round(scrollLeft / cardWidth);
+    index = Math.min(index, dots.length - 1);
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === index);
+    });
+  });
+})();
+
+/* ===== Promotion auto-slider ===== */
+(function() {
+  var track = document.getElementById('promoTrack');
+  var dotsContainer = document.getElementById('promoDots');
+  if (!track || !dotsContainer) return;
+
+  var dots = dotsContainer.querySelectorAll('.promo-dot');
+  var slides = track.querySelectorAll('.promo-slide');
+  var current = 0;
+  var total = slides.length;
+  var interval;
+
+  function goToSlide(index) {
+    current = index;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function nextSlide() {
+    goToSlide((current + 1) % total);
+  }
+
+  function startAuto() {
+    interval = setInterval(nextSlide, 5000);
+  }
+
+  function stopAuto() {
+    clearInterval(interval);
+  }
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var idx = parseInt(dot.getAttribute('data-index'), 10);
+      stopAuto();
+      goToSlide(idx);
+      startAuto();
+    });
+  });
+
+  /* Swipe support */
+  var startX = 0;
+  var isDragging = false;
+  track.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    isDragging = true;
+    stopAuto();
+  }, { passive: true });
+
+  track.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var endX = e.changedTouches[0].clientX;
+    var diff = startX - endX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && current < total - 1) {
+        goToSlide(current + 1);
+      } else if (diff < 0 && current > 0) {
+        goToSlide(current - 1);
+      }
+    }
+    startAuto();
+  }, { passive: true });
+
+  startAuto();
+})();
+
+/* ===== Bottom nav ===== */
+document.querySelectorAll('.nav-item[data-page]').forEach(function(item) {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+    item.classList.add('active');
+  });
+});
+
+/* Initial render */
+renderBillCardSummary();
+renderPaymentHistory(1);
+</script>
+</body>
+</html>
